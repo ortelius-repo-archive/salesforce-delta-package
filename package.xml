@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>HelloController</members>
+        <members>HelloControllerTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Newclass</members>
+        <members>NewPage</members>
+        <members>TestLink</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>PortalFooter</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <members>Community Plus Login User</members>
+        <members>Member Profile</members>
+               <name>Profile</name>
+    </types>
+    <types>
+        <members>es</members>
+        <name>Translations</name>
+    </types>
+    <types>
+        <members>TestServices</members>
+        <name>CustomLabel</name>
+    </types>
+    <types>
+        <members>Encryption1</members>
+        <members>Encryption2</members>
+        <name>CustomField</name>
+   </types>
+    <types>
+        <members>Hello</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+    <members>CaseClosure</members>
+    <members>Forms</members>
+    <members>UpdateProfile</members>
+    <members>CaseApply</members> 
+    <name>StaticResource</name>
+    </types> 
+    <types>
+        <members>Menu_Navigation</members>
+        <members>Logged_in_navigation</members>
+        <name>NavigationMenu</name>
+    </types>
+    <version>51.0</version>
+</Package>
