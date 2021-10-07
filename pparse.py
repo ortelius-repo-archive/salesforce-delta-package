@@ -1,6 +1,7 @@
 import copy
 import json
 import subprocess
+from pathlib import Path
 
 import click
 import xmltodict
@@ -14,8 +15,15 @@ from dict2xml import dict2xml
 @click.option('--outpackagexml', help='Output package.xml file name and path', required=True)
 def main(fromcommit, tocommit, packagexml, outpackagexml):
 
-    filelist = subprocess.run(['git', 'diff', '--name-only', fromcommit, tocommit], check=False, stdout=subprocess.PIPE).stdout.decode('utf-8')
+    filelist = subprocess.run(['git', 'diff', '--name-only', fromcommit, tocommit], check=False, stdout=subprocess.PIPE).stdout.decode('utf-8').splitlines()
 
+    cleanfiles = []
+    for filename in filelist:
+        parts = filename.split('/')
+        name = parts[-1].split('.')[0] + "."
+        cleanfiles.append(name)
+
+    print(cleanfiles)
     # open the input xml file and read
     # data in form of python dictionary
     # using xmltodict module
@@ -38,8 +46,11 @@ def main(fromcommit, tocommit, packagexml, outpackagexml):
                 members = [members]
 
             for mem in members:
-                lookup = name + "/" + mem + ".cls"
-                if (lookup not in filelist):
+                lookup = mem + "."
+                helper_lookup = mem + "Helper."
+                controller_lookup = mem + "Controller."
+
+                if (lookup not in cleanfiles and helper_lookup not in cleanfiles and controller_lookup not in cleanfiles):
                     if (type(clean_dict['Package']['types'][pos]['members']) == list):
                         clean_dict['Package']['types'][pos]['members'].remove(mem)
                     else:
@@ -59,16 +70,19 @@ def main(fromcommit, tocommit, packagexml, outpackagexml):
                 tlist.append(data_dict['Package']['types'][pos])
             pos = pos + 1
 
-        clean_dict['Package']['types'] = tlist
-        clean_dict['Package'].pop('@xmlns')
+        if (tlist):
+            clean_dict['Package']['types'] = tlist
+            clean_dict['Package'].pop('@xmlns')
 
-        xml = dict2xml(clean_dict, indent="    ")
-        xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' + xml
-        xml = xml.replace('<Package>', '<Package xmlns="http://soap.sforce.com/2006/04/metadata">')
+            xml = dict2xml(clean_dict, indent="    ")
+            xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' + xml
+            xml = xml.replace('<Package>', '<Package xmlns="http://soap.sforce.com/2006/04/metadata">')
 
-        with open(outpackagexml, 'w') as fileout:
-            fileout.write(xml)
-            fileout.write("\n")
+            with open(outpackagexml, 'w') as fileout:
+                fileout.write(xml)
+                fileout.write("\n")
+        else:
+            Path(outpackagexml).unlink(missing_ok=True)
 
 
 if __name__ == '__main__':
