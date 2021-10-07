@@ -19,11 +19,11 @@ def main(fromcommit, tocommit, packagexml, outpackagexml):
 
     cleanfiles = []
     for filename in filelist:
+        print("Processing " + filename)
         parts = filename.split('/')
         name = parts[-1].split('.')[0] + "."
         cleanfiles.append(name)
 
-    print(cleanfiles)
     # open the input xml file and read
     # data in form of python dictionary
     # using xmltodict module
